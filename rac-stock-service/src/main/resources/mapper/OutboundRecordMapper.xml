@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.OutboundRecordMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.OutboundRecord">
+        <id column="LeaveStockNo" jdbcType="INTEGER" property="leaveStockNo"></id>
+        <result column="OrderNo" jdbcType="VARCHAR" property="orderNo"/>
+        <result column="LeaveStock" jdbcType="TIMESTAMP" property="leaveStock"/>
+        <result column="PersonID" jdbcType="VARCHAR" property="personID"/>
+        <result column="Memo" jdbcType="VARCHAR" property="memo"/>
+        <result column="ReceivingUnitName" jdbcType="VARCHAR" property="receivingUnitName"/>
+        <result column="Supervisor" jdbcType="VARCHAR" property="supervisor"/>
+        <result column="Sum" jdbcType="DECIMAL" property="sum"/>
+        <result column="BusinessType" jdbcType="VARCHAR" property="businessType"/>
+        <collection property="list" ofType="com.huijian.rac.bean.LeaveStockListDetail">
+            <!--<id column="GID" jdbcType="INTEGER" property="gid"/>
+            <id column="LeaveStockNo" jdbcType="INTEGER" property="leaveStockNo"/>
+            <result column="GoodsName" jdbcType="VARCHAR" property="name"/>
+            <result column="Brand" jdbcType="VARCHAR" property="brand"/>
+            <result column="Specification" jdbcType="VARCHAR" property="specification"/>
+            <result column="Unit" jdbcType="VARCHAR" property="unit"/>
+            <result column="SecondaryAccounting" jdbcType="VARCHAR" property="secondaryAccounting"/>
+            <result column="Amount" jdbcType="INTEGER" property="amount"/>
+            <result column="UnitPrice" jdbcType="DECIMAL" property="unitPrice"/>
+            <result column="Sum" jdbcType="DECIMAL" property="sum"/>
+            <result column="ProductionBatch" jdbcType="VARCHAR" property="productionBatch"/>
+            <result column="TermOfValidity" jdbcType="TIMESTAMP" property="termOfValidity"/>
+            <result column="RegistrationNumber" jdbcType="VARCHAR" property="registrationNumber"/>
+            <result column="Pack" jdbcType="VARCHAR" property="pack"/>
+            <result column="Company" jdbcType="VARCHAR" property="company"/>
+            <result column="Origin" jdbcType="VARCHAR" property="origin"/>-->
+        </collection>
+    </resultMap>
+
+    <select id="getOutboundRecordByPage" resultMap="BaseResultMap">
+        SELECT * from sj_leavestocklist where LeaveStockNo like concat('%',#{keywords},'%')
+        and LeaveStock &gt;= #{startDate}
+        and LeaveStock &lt; #{endDate}
+        order by LeaveStockNo desc limit #{start}, #{size}
+    </select>
+
+    <select id="inquiryOneYear" resultType="java.lang.Integer">
+        select count(*) from sj_leavestocklist where YEAR(LeaveStock)=YEAR(NOW());
+    </select>
+
+    <insert id="wareHouse" parameterType="com.huijian.rac.bean.OutboundRecord">
+        insert into sj_leavestocklist
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="leaveStockNo != null">
+                LeaveStockNo,
+            </if>
+            <if test="orderNo != null">
+                OrderNo,
+            </if>
+            <if test="leaveStock != null">
+                LeaveStock,
+            </if>
+            <if test="personID != null">
+                PersonID,
+            </if>
+            <if test="memo != null">
+                Memo,
+            </if>
+            <if test="receivingUnitName != null">
+                ReceivingUnitName,
+            </if>
+            <if test="supervisor != null">
+                Supervisor,
+            </if>
+            <if test="sum != null">
+                Sum,
+            </if>
+            <if test="businessType != null">
+                BusinessType
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="leaveStockNo != null">
+                #{leaveStockNo,jdbcType=INTEGER},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="leaveStock != null">
+                #{leaveStock,jdbcType=TIMESTAMP},
+            </if>
+            <if test="personID != null">
+                #{personID,jdbcType=VARCHAR},
+            </if>
+            <if test="memo != null">
+                #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="receivingUnitName != null">
+                #{receivingUnitName,jdbcType=VARCHAR},
+            </if>
+            <if test="supervisor != null">
+                #{supervisor,jdbcType=VARCHAR},
+            </if>
+            <if test="sum != null">
+                #{sum,jdbcType=DECIMAL},
+            </if>
+            <if test="businessType != null">
+                #{businessType,jdbcType=DECIMAL},
+            </if>
+
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.huijian.rac.bean.OutboundRecord">
+        update sj_leavestocklist
+        <set>
+            <if test="leaveStockNo!=null">
+                LeaveStockNo=#{leaveStockNo,jdbcType=INTEGER},
+            </if>
+            <if test="orderNo!=null">
+                OrderNo=#{orderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="leaveStock!=null">
+                LeaveStock=#{leaveStock,jdbcType=TIMESTAMP},
+            </if>
+            <if test="personID!=null">
+                PersonID=#{personID,jdbcType=VARCHAR},
+            </if>
+            <if test="memo!=null">
+                Memo=#{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="receivingUnitName!=null">
+                ReceivingUnitName=#{receivingUnitName,jdbcType=VARCHAR},
+            </if>
+            <if test="supervisor!=null">
+                Supervisor=#{supervisor,jdbcType=VARCHAR},
+            </if>
+            <if test="sum!=null">
+                Sum=#{sum,jdbcType=DECIMAL},
+            </if>
+            <if test="businessType != null">
+                BusinessType=#{businessType,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where LeaveStockNo = #{leaveStockNo}
+    </update>
+</mapper>

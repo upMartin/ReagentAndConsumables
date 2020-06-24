@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.DepartsMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.Depart">
+        <id column="DEPARTCODE" jdbcType="VARCHAR" property="departCode"/>
+        <id column="HOSPITALID" jdbcType="VARCHAR" property="hospitalID"/>
+        <result column="DEPARTNAME" jdbcType="VARCHAR" property="departName"/>
+        <result column="PARENTCODE" jdbcType="VARCHAR" property="parentCode"/>
+        <result column="ISLAB" jdbcType="INTEGER" property="isLab"/>
+        <result column="SRM1" jdbcType="VARCHAR" property="srmOne"/>
+        <result column="SRM2" jdbcType="VARCHAR" property="srmTwo"/>
+        <result column="SRM3" jdbcType="VARCHAR" property="srmThree"/>
+        <result column="MEMO" jdbcType="VARCHAR" property="memo"/>
+        <result column="ISACTIVE" jdbcType="INTEGER" property="isActive"/>
+        <result column="MOBILE" jdbcType="VARCHAR" property="mobile"/>
+        <result column="LASTSENDDATE" jdbcType="VARCHAR" property="lastSendDate"/>
+        <result column="HOSPITALID" jdbcType="VARCHAR" property="hospitalID"/>
+        <result column="DEPARTTYPE" jdbcType="INTEGER" property="departType"/>
+    </resultMap>
+
+    <select id="quiryDepartsByHospitalID" resultMap="BaseResultMap">
+        select * from pub_depart where HOSPITALID=#{hospitalID}
+    </select>
+
+
+</mapper>

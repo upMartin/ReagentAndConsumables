@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.DiscardDetailMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.DiscardDetail">
+        <id column="DiscardDetailID" jdbcType="INTEGER" property="discardDetailID"></id>
+        <result column="GoodsID" jdbcType="VARCHAR" property="goodsID"/>
+        <result column="DiscardNo" jdbcType="VARCHAR" property="discardNo"/>
+        <result column="Quantity" jdbcType="VARCHAR" property="quantity"/>
+        <result column="UnitPrice" jdbcType="VARCHAR" property="unitPrice"/>
+        <result column="UnitID" jdbcType="VARCHAR" property="unitID"/>
+        <result column="Unit" jdbcType="VARCHAR" property="unit"/>
+        <result column="GoodsName" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="ProductionBatch" jdbcType="VARCHAR" property="productionBatch"/>
+    </resultMap>
+
+    <insert id="addDiscardDetail" parameterType="com.huijian.rac.bean.DiscardDetail">
+        insert into sj_discarddetail (DiscardDetailID, DiscardNo, GoodsID, Quantity, UnitPrice, UnitID)
+        values
+        <foreach collection="list" item="item" separator=","  index="index">
+            (#{item.discardDetailID},
+            #{item.discardNo},
+            #{item.goodsID},
+            #{item.quantity},
+            #{item.unitPrice},
+            #{item.unitID},
+            #{item.productionBatch})
+        </foreach>
+
+    </insert>
+
+    <select id="inquiryByID" resultMap="BaseResultMap">
+        select dis.*, dic.GoodsName, dic.Unit from  sj_discarddetail as dis inner join
+        sj_goodsdictionary as dic on DiscardNo=#{discardNo} and dic.GoodsID = dis.GoodsID
+    </select>
+</mapper>

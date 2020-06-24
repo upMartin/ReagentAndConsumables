@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.GoodsPackageDetailMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.GoodsPackageDetail">
+        <id column="GoodsID" jdbcType="VARCHAR" property="goodsID"/>
+        <id column="PackageID" jdbcType="INTEGER" property="packageID"/>
+        <result column="GoodsName" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="UnitPrice" jdbcType="DECIMAL" property="unitPrice"/>
+        <result column="Amount" jdbcType="INTEGER" property="amount"/>
+        <!--<result column="ReceiveNum" jdbcType="INTEGER" property="receiveNum"/>
+        <result column="SendNum" jdbcType="INTEGER" property="sendNum"/>-->
+        <result column="Memo" jdbcType="VARCHAR" property="memo"/>
+        <!--<result column="RecommendedOrderQuantity" jdbcType="INTEGER" property="recommendedOrderQuantity"/>
+        <result column="UnarrivedQuantity" jdbcType="INTEGER" property="unarrivedQuantity"/>-->
+        <result column="UnitID" jdbcType="INTEGER" property="unitID"/>
+        <result column="Specification" jdbcType="VARCHAR" property="specification"/>
+        <result column="Urgent" jdbcType="INTEGER" property="urgent"/>
+        <result column="ExpirationDate" jdbcType="INTEGER" property="expirationDate"/>
+    </resultMap>
+    
+    <select id="inquiryGoodsPackageDetail" resultMap="BaseResultMap">
+        select * from sj_packagedetail where PackageID = #{packageID}
+    </select>
+
+</mapper>

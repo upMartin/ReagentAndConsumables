@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.DeliveryUnitMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.DeliveryUnit">
+        <id column="SupplierID" jdbcType="INTEGER" property="supplierID"></id>
+        <result column="SupplierName" jdbcType="VARCHAR" property="supplierName"/>
+        <result column="Abbreviation" jdbcType="VARCHAR" property="abbreviation"/>
+        <result column="Linkman" jdbcType="VARCHAR" property="linkman"/>
+        <result column="TELEPHONE" jdbcType="VARCHAR" property="telephone"/>
+        <result column="Address" jdbcType="VARCHAR" property="address"/>
+        <result column="Email" jdbcType="VARCHAR" property="email"/>
+        <result column="POSTBOAT" jdbcType="VARCHAR" property="postboat"/>
+    </resultMap>
+    
+    <select id="getAllDeliveryUnit" resultMap="BaseResultMap">
+        select * from sj_supplier;
+    </select>
+
+    <select id="getDeliveryUnitBySupplierName" resultMap="BaseResultMap">
+        select * from sj_supplier where SupplierName = #{name}
+    </select>
+</mapper>

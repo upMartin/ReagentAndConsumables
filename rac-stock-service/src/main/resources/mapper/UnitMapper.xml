@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.UnitMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.Unit">
+        <id column="UnitID" jdbcType="INTEGER" property="unitID"/>
+        <result column="UnitName" jdbcType="VARCHAR" property="unitName"/>
+        <result column="Remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="IsActive" jdbcType="INTEGER" property="isActive"/>
+        <result column="Proportion" jdbcType="INTEGER" property="proportion"/>
+    </resultMap>
+
+    <select id="quiryByUnitID" resultMap="BaseResultMap">
+        select  * from sj_unit where UnitID = #{unitID}
+    </select>
+</mapper>

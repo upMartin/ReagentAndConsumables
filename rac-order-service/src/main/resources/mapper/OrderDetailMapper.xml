@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.OrderDetailMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.OrderDetail">
+        <id column="OrderNo" jdbcType="VARCHAR" property="orderNo"/>
+        <id column="GoodsID" jdbcType="INTEGER" property="goodsID"/>
+        <result column="GoodsName" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="Brand" jdbcType="VARCHAR" property="brand"/>
+        <result column="UnitPrice" jdbcType="DECIMAL" property="unitPrice"/>
+        <result column="OrderNum" jdbcType="INTEGER" property="amount"/>
+        <result column="ReceiveNum" jdbcType="INTEGER" property="receiveNum"/>
+        <result column="SendNum" jdbcType="INTEGER" property="sendNum"/>
+        <result column="Memo" jdbcType="VARCHAR" property="memo"/>
+        <result column="RecommendedOrderQuantity" jdbcType="INTEGER" property="recommendedOrderQuantity"/>
+        <result column="UnarrivedQuantity" jdbcType="INTEGER" property="unarrivedQuantity"/>
+        <result column="UnitID" jdbcType="INTEGER" property="unitID"/>
+        <result column="LastOrderQuantity" jdbcType="INTEGER" property="lastOrderQuantity"/>
+        <result column="Specification" jdbcType="INTEGER" property="specification"/>
+    </resultMap>
+
+    <select id="inquiryByOrderNo" resultMap="BaseResultMap">
+        select * from sj_orderdetail where OrderNo = #{orderNo} and GoodsID in
+        <foreach collection="goodsIDs" separator="," open="(" close=")" item="goodsID">
+            #{goodsID}
+        </foreach>
+    </select>
+
+    <insert id="insert">
+        insert into sj_orderdetail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">
+                OrderNo,
+            </if>
+            <if test="goodsID != null">
+                GoodsID,
+            </if>
+            <if test="goodsName != null">
+                GoodsName,
+            </if>
+            <if test="brand != null">
+                Brand,
+            </if>
+            <if test="unitPrice != null">
+                UnitPrice,
+            </if>
+            <if test="memo != null">
+                Memo,
+            </if>
+            <if test="amount != null">
+                OrderNum,
+            </if>
+            <if test="receiveNum != null">
+                ReceiveNum,
+            </if>
+            <if test="sendNum != null">
+                SendNum,
+            </if>
+            <if test="recommendedOrderQuantity != null">
+                RecommendedOrderQuantity,
+            </if>
+            <if test="lastOrderQuantity != null">
+                LastOrderQuantity,
+            </if>
+            <if test="specification != null">
+                Specification,
+            </if>
+            <if test="unitID != null">
+                UnitID,
+            </if>
+            <if test="unarrivedQuantity != null">
+                UnarrivedQuantity,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">
+                #{orderNo},
+            </if>
+            <if test="goodsID != null">
+                #{goodsID},
+            </if>
+            <if test="goodsName != null">
+                #{goodsName},
+            </if>
+            <if test="brand != null">
+                #{brand},
+            </if>
+            <if test="unitPrice != null">
+                #{unitPrice},
+            </if>
+            <if test="memo != null">
+                #{memo},
+            </if>
+            <if test="amount != null">
+                #{amount},
+            </if>
+            <if test="receiveNum != null">
+                #{receiveNum},
+            </if>
+            <if test="sendNum != null">
+                #{sendNum},
+            </if>
+            <if test="recommendedOrderQuantity != null ">
+                #{recommendedOrderQuantity},
+            </if>
+            <if test="lastOrderQuantity != null">
+                #{lastOrderQuantity},
+            </if>
+            <if test="specification != null">
+                #{specification},
+            </if>
+            <if test="unitID != null">
+                #{unitID},
+            </if>
+            <if test="unarrivedQuantity != null">
+                #{unarrivedQuantity},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="findByOrderNo" resultType="java.lang.Integer">
+        select count(*) from sj_orderdetail where OrderNo = #{orderNo}
+    </select>
+
+    <select id="findListByOrderNo" resultMap="BaseResultMap">
+        select * from sj_orderdetail where OrderNo = #{orderNo}
+    </select>
+
+    <delete id="deleteOrderDetailByOrderNo">
+        delete from sj_orderdetail where OrderNo = #{orderNo}
+    </delete>
+
+    <update id="update" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="orderDetail">
+            update sj_orderdetail
+            <trim prefix="set" suffixOverrides=",">
+                <if test="orderDetail.goodsName != null and orderDetail.goodsName != ''">
+                    GoodsName = #{orderDetail.goodsName},
+                </if>
+                <if test="orderDetail.brand != null">
+                    Brand= #{orderDetail.brand},
+                </if>
+                <if test="orderDetail.unitPrice != null">
+                    UnitPrice = #{orderDetail.unitPrice},
+                </if>
+                <if test="orderDetail.memo != null">
+                    Memo = #{orderDetail.memo},
+                </if>
+                <if test="orderDetail.amount != null">
+                    OrderNum = #{orderDetail.amount},
+                </if>
+                <if test="orderDetail.receiveNum != null">
+                    ReceiveNum = #{orderDetail.receiveNum},
+                </if>
+                <if test="orderDetail.sendNum != null">
+                    SendNum = #{orderDetail.sendNum},
+                </if>
+                <if test="orderDetail.recommendedOrderQuantity != null ">
+                    RecommendedOrderQuantity = #{orderDetail.recommendedOrderQuantity},
+                </if>
+                <if test="orderDetail.lastOrderQuantity != null">
+                    LastOrderQuantity = #{orderDetail.lastOrderQuantity},
+                </if>
+                <if test="orderDetail.specsType != null and orderDetail.specsType != ''">
+                    SpecsType = #{orderDetail.specsType},
+                </if>
+                <if test="orderDetail.unitID != null">
+                    UnitID = #{orderDetail.unitID},
+                </if>
+                <if test="orderDetail.unarrivedQuantity != null">
+                    UnarrivedQuantity = #{orderDetail.unarrivedQuantity},
+                </if>
+            </trim>
+            where OrderNo = #{orderDetail.orderNo} and GoodsID = #{orderDetail.goodsID}
+        </foreach>
+    </update>
+</mapper>

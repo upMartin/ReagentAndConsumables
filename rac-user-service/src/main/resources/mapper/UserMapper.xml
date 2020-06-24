@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.User">
+        <id column="PERSONID" jdbcType="VARCHAR" property="personID"/>
+        <id column="HOSPITALID" jdbcType="VARCHAR" property="hospitalID"/>
+        <result column="PERSONNAME" jdbcType="VARCHAR" property="personName"/>
+        <result column="DEPARTCODE" jdbcType="VARCHAR" property="departCode"/>
+        <result column="MEMO" jdbcType="VARCHAR" property="memo"/>
+        <result column="SRM1" jdbcType="VARCHAR" property="srmOne"/>
+        <result column="SRM2" jdbcType="VARCHAR" property="srmTwo"/>
+        <result column="SRM3" jdbcType="VARCHAR" property="srmThree"/>
+        <result column="GENDER" jdbcType="VARCHAR" property="gender"/>
+        <result column="BIRTHDAY" jdbcType="VARCHAR" property="birthday"/>
+        <result column="ICCARDNO" jdbcType="VARCHAR" property="iccardNo"/>
+        <result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+        <result column="TELEPHONE" jdbcType="VARCHAR" property="telephone"/>
+        <result column="EMAIL" jdbcType="VARCHAR" property="email"/>
+        <result column="ISOPERATE" jdbcType="INTEGER" property="isOperate"/>
+        <result column="USERNAME" jdbcType="VARCHAR" property="username"/>
+        <result column="PASSWORD" jdbcType="VARCHAR" property="password"/>
+        <result column="ISACTIVE" jdbcType="INTEGER" property="isActive"/>
+        <result column="SIGNEDPHOTO" jdbcType="BLOB" property="signedPhoto"/>
+        <result column="DEFAULTWORKGROUPID" jdbcType="INTEGER" property="defaultWorkGroupID"/>
+        <result column="WORKMODE" jdbcType="INTEGER" property="workMode"/>
+        <result column="PJQDOCTOR" jdbcType="INTEGER" property="pjqDoctor"/>
+        <result column="ZDBCTXM" jdbcType="INTEGER" property="zdbcTXM"/>
+        <result column="ROLEID" jdbcType="INTEGER" property="roleID"/>
+        <collection property="roles" ofType="com.huijian.rac.bean.Role" select="com.huijian.rac.mapper.UserMapper.getRolesByUserId"
+                    column="personID">
+        </collection>
+        <!--<id column="PERSONID" jdbcType="VARCHAR" property="id"/>
+       <result column="name" jdbcType="VARCHAR" property="name"/>
+       <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+       <result column="address" jdbcType="VARCHAR" property="address"/>
+       <result column="enabled" jdbcType="INTEGER" property="enabled"/>
+       <result column="username" jdbcType="VARCHAR" property="username"/>
+       <result column="password" jdbcType="VARCHAR" property="password"/>
+       <result column="email" jdbcType="VARCHAR" property="email"/>
+       <result column="departID" jdbcType="VARCHAR" property="departID"/>
+       <result column="remark" jdbcType="VARCHAR" property="remark"/>
+       <result column="departmentName" jdbcType="VARCHAR" property="departmentName"/>
+       <result column="roleID" jdbcType="VARCHAR" property="roleID"/>
+       <collection property="roles" ofType="com.huijian.rac.bean.Role" select="com.huijian.rac.mapper.UserMapper.getRolesByUserId"
+                   column="id">
+       </collection>-->
+    </resultMap>
+
+    <select id="findByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from pub_doctor WHERE USERNAME=#{username};
+    </select>
+    <select id="getRolesByUserId" resultType="com.huijian.rac.bean.Role">
+        SELECT r.* FROM pub_doctor d,pub_role r where d.ROLEID=r.ROLEID AND d.PERSONID=#{id}
+    </select>
+    <select id="getUserByPage" resultMap="BaseResultMap">
+        SELECT u.*
+        from user u where u.name like concat('%',#{keywords},'%')
+        <if test="departID!=null and departID !=''">
+            and departID = #{departID}
+        </if>
+        order by u.id desc limit #{start}, #{size}
+    </select>
+
+    <select id="getCountByKeywords" resultMap="BaseResultMap">
+        SELECT count(*) from user where name like concat('%',#{keywords},'%')
+    </select>
+
+    <insert id="addUser" parameterType="com.huijian.rac.bean.User">
+        insert into user (name,telephone,address,enabled,username,password,email,departID,remark,departmentName,roleID)
+        values(#{name,jdbcType=VARCHAR},#{telephone,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR}, #{enabled,jdbcType=INTEGER},
+        #{username,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{departID,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},
+        #{departmentName,jdbcType=VARCHAR},#{roleID,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="selectUserID" resultType="java.lang.Long">
+        select max(id) from user
+    </select>
+
+    <insert id="insertIntoUserAndRole" parameterType="java.lang.Long">
+        insert into hr_role (hrid,rid) values (#{userID,jdbcType=INTEGER},#{id,jdbcType=INTEGER})
+    </insert>
+
+    <update id="updateUser" parameterType="com.huijian.rac.bean.User">
+        update user
+        <set>
+            <if test="name!=null">
+                name=#{name,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone!=null">
+                telephone=#{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="email!=null">
+                email=#{email,jdbcType=VARCHAR},
+            </if>
+            <if test="address!=null">
+                address=#{address,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled!=null">
+                enabled=#{enabled,jdbcType=VARCHAR},
+            </if>
+            <if test="username!=null">
+                username=#{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password!=null">
+                password=#{password,jdbcType=VARCHAR},
+            </if>
+            <if test="roleID!=null">
+                roleID=#{roleID,jdbcType=VARCHAR},
+            </if>
+            <if test="roleID!=null">
+                roleID=#{roleID,jdbcType=VARCHAR},
+            </if>
+            <if test="departID!=null">
+                departID=#{departID,jdbcType=VARCHAR},
+            </if>
+            <if test="departmentName!=null">
+                departmentName=#{departmentName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateUserAndRole" parameterType="java.lang.Long">
+        update hr_role
+        <set>
+            <if test="roleID!=null">
+                rid = #{roleID,jdbcType=INTEGER}
+            </if>
+        </set>
+        where hrid = #{userID}
+    </update>
+
+    <delete id="deleteById">
+        delete from user where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteUserAndRoleById">
+        delete from hr_role where hrid in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectRoles" resultType="com.huijian.rac.bean.Role">
+        select * from role
+    </select>
+
+    <select id="selectDeparts" parameterType="java.lang.String" resultType="com.huijian.rac.bean.Depart">
+        select * from depart  where departID = #{departID}
+    </select>
+
+    <select id="selectChildDeparts" parameterType="java.lang.String" resultType="com.huijian.rac.bean.Depart">
+        select * from depart  where parentID = #{departID}
+    </select>
+
+    <select id="getDepartmentNameByID" parameterType="java.lang.String" resultType="java.lang.String">
+        select name from depart where departID = #{departID}
+    </select>
+</mapper>

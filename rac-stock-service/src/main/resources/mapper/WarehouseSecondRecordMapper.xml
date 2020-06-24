@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.WarehouseSecondRecordMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.WarehouseSecondRecord">
+        <id column="ID" jdbcType="INTEGER" property="ID"/>
+        <result column="HOSPITALID" jdbcType="VARCHAR" property="hospitalID"/>
+        <result column="WAREHOUSENO" jdbcType="VARCHAR" property="warehouseNo"/>
+        <result column="PURCHASENO" jdbcType="VARCHAR" property="purchaseNo"/>
+        <result column="DELIVERYNO" jdbcType="VARCHAR" property="deliveryNo"/>
+        <result column="BUSINESSTYPE" jdbcType="VARCHAR" property="businessType"/>
+        <result column="DELIVERYUNIT" jdbcType="VARCHAR" property="deliveryUnit"/>
+        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
+        <result column="DOCUMENTAMOUNT" jdbcType="DECIMAL" property="amount"/>
+        <result column="ACCOUNTINGSUBJECTS" jdbcType="VARCHAR" property="accountingSubjects"/>
+        <result column="PERSONID" jdbcType="VARCHAR" property="personID"/>
+        <result column="WAREHOUSEDATE" jdbcType="TIMESTAMP" property="warehouseDate"/>
+        <result column="BILLINGDATE" jdbcType="TIMESTAMP" property="billingDate"/>
+        <result column="MEMO" jdbcType="VARCHAR" property="memo"/>
+        <result column="EXTERNALOUTBOUNDORDER" jdbcType="VARCHAR" property="externalOutboundOrder"/>
+        <result column="GOODSID" jdbcType="VARCHAR" property="goodsID"/>
+        <result column="ORDERNO" jdbcType="VARCHAR" property="orderNo"/>
+        <collection property="list" ofType="com.huijian.rac.bean.SecondGoodsRecord">
+        </collection>
+    </resultMap>
+
+    <select id="inquiryOneYear" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from sj_warehousesecondrecord where YEAR(WAREHOUSEDATE)=YEAR(NOW())
+        and HOSPITALID = #{hospitalID};
+    </select>
+
+    <insert id="wareHouse" parameterType="com.huijian.rac.bean.WarehouseSecondRecord">
+        insert into sj_warehousesecondrecord
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="warehouseNo != null">
+                WAREHOUSENO,
+            </if>
+            <if test="purchaseNo != null">
+                PURCHASENO,
+            </if>
+            <if test="deliveryNo != null">
+                DELIVERYNO,
+            </if>
+            <if test="businessType != null">
+                BUSINESSTYPE,
+            </if>
+            <if test="deliveryUnit != null">
+                DELIVERYUNIT,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="amount != null">
+                DOCUMENTAMOUNT,
+            </if>
+            <if test="accountingSubjects != null">
+                ACCOUNTINGSUBJECTS,
+            </if>
+            <if test="personID != null">
+                PERSONID,
+            </if>
+            <if test="warehouseDate != null">
+                WAREHOUSEDATE,
+            </if>
+            <if test="billingDate != null and billingDate != ''">
+                BILLINGDATE,
+            </if>
+            <if test="memo != null">
+                MEMO,
+            </if>
+            <if test="externalOutboundOrder != null">
+                EXTERNALOUTBOUNDORDER,
+            </if>
+            <if test="goodsID != null">
+                GOODSID,
+            </if>
+            <if test="hospitalID != null">
+                HOSPITALID,
+            </if>
+            <if test="orderNo != null">
+                ORDERNO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="warehouseNo != null">
+                #{warehouseNo,jdbcType=VARCHAR},
+            </if>
+            <if test="purchaseNo != null">
+                #{purchaseNo,jdbcType=VARCHAR},
+            </if>
+            <if test="deliveryNo != null">
+                #{deliveryNo,jdbcType=VARCHAR},
+            </if>
+            <if test="businessType != null">
+                #{businessType,jdbcType=VARCHAR},
+            </if>
+            <if test="deliveryUnit != null">
+                #{deliveryUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null">
+                #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="accountingSubjects != null">
+                #{accountingSubjects,jdbcType=VARCHAR},
+            </if>
+            <if test="personID != null">
+                #{personID,jdbcType=TIMESTAMP},
+            </if>
+            <if test="warehouseDate != null">
+                #{warehouseDate,jdbcType=VARCHAR},
+            </if>
+            <if test="billingDate != null and billingDate != ''">
+                #{billingDate,jdbcType=VARCHAR},
+            </if>
+            <if test="memo != null">
+                #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="externalOutboundOrder != null">
+                #{externalOutboundOrder,jdbcType=VARCHAR},
+            </if>
+            <if test="goodsID != null">
+                #{goodsID,jdbcType=VARCHAR},
+            </if>
+            <if test="hospitalID != null">
+                #{hospitalID,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectByWarehouseNo" resultType="java.lang.Integer">
+        select ID from sj_warehousesecondrecord
+        where WarehouseNo = #{warehouseNo,jdbcType=VARCHAR}
+        and HOSPITALID = #{hospitalID}
+    </select>
+
+    <select id="getWarehouseRecordByPage" resultMap="BaseResultMap">
+        SELECT * from sj_warehousesecondrecord where WarehouseNo like concat('%',#{keywords},'%')
+        and WarehouseDate &gt;= #{startDate}
+        and WarehouseDate &lt; #{endDate}
+        and HospitalID = #{hospitalID}
+        order by ID desc limit #{start}, #{size}
+    </select>
+
+    <delete id="deleteWarehouseSecondRecordById">
+        delete from sj_warehousesecondrecord where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+        and HospitalID = #{hospitalID}
+    </delete>
+
+    <update id="update" parameterType="com.huijian.rac.bean.WarehouseSecondRecord">
+        update sj_warehousesecondrecord
+        <set>
+            <if test="warehouseNo!=null">
+                WAREHOUSENO=#{warehouseNo,jdbcType=VARCHAR},
+            </if>
+            <if test="purchaseNo!=null">
+                PURCHASENO=#{purchaseNo,jdbcType=VARCHAR},
+            </if>
+            <if test="deliveryNo!=null">
+                DELIVERYNO=#{deliveryNo,jdbcType=VARCHAR},
+            </if>
+            <if test="businessType!=null">
+                BUSINESSTYPE=#{businessType,jdbcType=VARCHAR},
+            </if>
+            <if test="deliveryUnit!=null">
+                DELIVERYUNIT=#{deliveryUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="status!=null">
+                STATUS=#{status,jdbcType=VARCHAR},
+            </if>
+            <if test="amount!=null">
+                DOCUMENTAMOUNT=#{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="accountingSubjects!=null">
+                ACCOUNTINGSUBJECTS=#{accountingSubjects,jdbcType=VARCHAR},
+            </if>
+            <if test="personID!=null">
+                PERSONID=#{personID,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseDate!=null">
+                WAREHOUSEDATE=#{warehouseDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="billingDate!=null">
+                BILLINGDATE=#{billingDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="memo!=null">
+                MEMO=#{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="externalOutboundOrder!=null">
+                EXTERNALOUTBOUNDORDER=#{externalOutboundOrder,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{ID}
+    </update>
+</mapper>

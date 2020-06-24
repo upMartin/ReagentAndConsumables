@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.GoodsDictionaryMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.Good">
+        <id column="GoodsID" jdbcType="INTEGER" property="goodsID"></id>
+        <result column="GoodsName" jdbcType="VARCHAR" property="goodsName"/>
+        <result column="Brand" jdbcType="VARCHAR" property="brand"/>
+        <result column="Specification" jdbcType="VARCHAR" property="specification"/>
+        <result column="UnitID" jdbcType="INTEGER" property="unitID"/>
+        <result column="UnitName" jdbcType="VARCHAR" property="unit"/>
+        <result column="UnitPrice" jdbcType="DECIMAL" property="unitPrice"/>
+        <result column="CategoryTypeID" jdbcType="INTEGER" property="categoryTypeID"/>
+        <result column="SupplierID" jdbcType="INTEGER" property="supplierID"/>
+        <result column="TXM" jdbcType="VARCHAR" property="TXM"/>
+        <result column="Abbreviation" jdbcType="VARCHAR" property="abbreviation"/>
+        <result column="PassCode" jdbcType="VARCHAR" property="passCode"/>
+        <result column="ExpirationDate" jdbcType="INTEGER" property="expirationDate"/>
+        <result column="SecondaryAccounting" jdbcType="VARCHAR" property="secondaryAccounting"/>
+        <result column="RegistrationNumber" jdbcType="VARCHAR" property="registrationNumber"/>
+        <result column="Pack" jdbcType="VARCHAR" property="pack"/>
+        <result column="Origin" jdbcType="VARCHAR" property="origin"/>
+    </resultMap>
+
+    <select id="getAllGoods" resultMap="BaseResultMap">
+        select sg.*, su.UnitName from sj_goodsdictionary sg INNER join sj_unit su on sg.UnitID = su.UnitID
+        <!--<where>
+            <if test="goodsName != null and goodsName != ''">
+                GoodsName like concat('%',#{goodsName},'%')
+            </if>
+        </where>-->
+    </select>
+
+    <select id="getWarehouseDate" resultType="java.util.Date">
+        select DATE_FORMAT(now(),"%Y-%m-%d %H:%i:%s")
+    </select>
+
+    <update id="updateGoodsDictionary">
+        update sj_goodsdictionary set
+        <set>
+            <if test="goodsName!=null">
+                GoodsName = #{goodsName,jdbcType=VARCHAR},
+            </if>
+            <if test="specification!=null">
+                Specification=#{specsType,jdbcType=VARCHAR},
+            </if>
+            <if test="unitID!=null">
+                UnitID=#{unitID,jdbcType=INTEGER},
+            </if>
+            <if test="categoryTypeID!=null">
+                CategoryTypeID=#{categoryTypeID,jdbcType=INTEGER},
+            </if>
+            <if test="supplierID!=null">
+                SupplierID=#{supplierID,jdbcType=INTEGER},
+            </if>
+            <if test="TXM!=null">
+                TXM=#{TXM,jdbcType=VARCHAR},
+            </if>
+            <if test="abbreviation!=null">
+                Abbreviation=#{abbreviation,jdbcType=VARCHAR},
+            </if>
+            <if test="passCode!=null">
+                PassCode=#{passCode,jdbcType=VARCHAR},
+            </if>
+            <if test="unitPrice!=null">
+                UnitPrice=#{unitPrice,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where GoodsID = #{goodsID}
+    </update>
+
+
+    <select id="findGoodsIDByGoodsName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select GoodsID from sj_goodsdictionary where GoodsName = #{name}
+    </select>
+
+    <select id="inquiryByWord" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select sg.*, su.UnitName from sj_goodsdictionary sg
+        INNER join sj_unit su on GoodsName like concat('%',#{goodsName},'%')
+        and sg.UnitID = su.UnitID
+    </select>
+
+    <select id="inquiryByIDAndName" resultMap="BaseResultMap">
+        select sg.*, su.UnitName from sj_goodsdictionary sg
+        INNER join sj_unit su on sg.GoodsName=#{goodsName} and sg.GoodsID=#{goodsID}
+        and sg.UnitID = su.UnitID
+    </select>
+</mapper>

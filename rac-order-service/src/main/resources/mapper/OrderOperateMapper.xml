@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huijian.rac.mapper.OrderOperateMapper" >
+  <resultMap id="BaseResultMap" type="com.huijian.rac.bean.OrderOperate" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ORDERNO" property="orderno" jdbcType="VARCHAR" />
+    <result column="OPERATING" property="operating" jdbcType="VARCHAR" />
+    <result column="ORDERSTATE" property="orderstate" jdbcType="INTEGER" />
+    <result column="ORERATINGDATE" property="oreratingdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ORDERNO, OPERATING, ORDERSTATE, ORERATINGDATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sj_orderoperate
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sj_orderoperate
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.huijian.rac.bean.OrderOperate" >
+    insert into sj_orderoperate (ID, ORDERNO, OPERATING, 
+      ORDERSTATE, ORERATINGDATE)
+    values (#{id,jdbcType=INTEGER}, #{orderno,jdbcType=VARCHAR}, #{operating,jdbcType=VARCHAR}, 
+      #{orderstate,jdbcType=INTEGER}, #{oreratingdate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.huijian.rac.bean.OrderOperate" >
+    insert into sj_orderoperate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="orderno != null" >
+        ORDERNO,
+      </if>
+      <if test="operating != null" >
+        OPERATING,
+      </if>
+      <if test="orderstate != null" >
+        ORDERSTATE,
+      </if>
+      <if test="oreratingdate != null" >
+        ORERATINGDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderno != null" >
+        #{orderno,jdbcType=VARCHAR},
+      </if>
+      <if test="operating != null" >
+        #{operating,jdbcType=VARCHAR},
+      </if>
+      <if test="orderstate != null" >
+        #{orderstate,jdbcType=INTEGER},
+      </if>
+      <if test="oreratingdate != null" >
+        #{oreratingdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.huijian.rac.bean.OrderOperate" >
+    update sj_orderoperate
+    <set >
+      <if test="orderno != null" >
+        ORDERNO = #{orderno,jdbcType=VARCHAR},
+      </if>
+      <if test="operating != null" >
+        OPERATING = #{operating,jdbcType=VARCHAR},
+      </if>
+      <if test="orderstate != null" >
+        ORDERSTATE = #{orderstate,jdbcType=INTEGER},
+      </if>
+      <if test="oreratingdate != null" >
+        ORERATINGDATE = #{oreratingdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.huijian.rac.bean.OrderOperate" >
+    update sj_orderoperate
+    set ORDERNO = #{orderno,jdbcType=VARCHAR},
+      OPERATING = #{operating,jdbcType=VARCHAR},
+      ORDERSTATE = #{orderstate,jdbcType=INTEGER},
+      ORERATINGDATE = #{oreratingdate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="inquiryOrderSchedule" resultMap="BaseResultMap">
+    select * from sj_orderoperate where
+    ORDERNO = #{orderNo}
+    order by ORERATINGDATE desc
+  </select>
+
+  <insert id="insertOrderOperating" parameterType="com.huijian.rac.bean.OrderOperate">
+    insert into sj_orderoperate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="orderno != null" >
+        ORDERNO,
+      </if>
+      <if test="operating != null" >
+        OPERATING,
+      </if>
+      <if test="orderstate != null" >
+        ORDERSTATE,
+      </if>
+      <if test="oreratingdate != null" >
+        ORERATINGDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderno != null" >
+        #{orderno,jdbcType=VARCHAR},
+      </if>
+      <if test="operating != null" >
+        #{operating,jdbcType=VARCHAR},
+      </if>
+      <if test="orderstate != null" >
+        #{orderstate,jdbcType=INTEGER},
+      </if>
+      <if test="oreratingdate != null" >
+        #{oreratingdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

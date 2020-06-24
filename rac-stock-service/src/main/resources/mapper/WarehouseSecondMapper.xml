@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.WarehouseSecondMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.WarehouseSecond">
+        <id column="ID" jdbcType="INTEGER" property="ID"></id>
+        <result column="GoodsID" jdbcType="INTEGER" property="goodsID"/>
+        <result column="Quantity" jdbcType="INTEGER" property="quantity"/>
+        <result column="StorageLocation" jdbcType="VARCHAR" property="storageLocation"/>
+        <result column="HospitalID" jdbcType="VARCHAR" property="hospitalID"/>
+    </resultMap>
+
+    <select id="selectByGoodsID" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(*) from sj_warehousesecond where GoodsID=#{goodsID}
+    </select>
+
+
+    <insert id="warehouse" parameterType="com.huijian.rac.bean.WarehouseSecond">
+        insert into sj_warehousesecond
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsID != null">
+                GoodsID,
+            </if>
+            <if test="quantity != null">
+                Quantity,
+            </if>
+            <if test="storageLocation != null">
+                StorageLocation,
+            </if>
+            <if test="hospitalID != null">
+                HospitalID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsID != null">
+                #{goodsID,jdbcType=INTEGER},
+            </if>
+            <if test="quantity != null">
+                #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="storageLocation != null">
+                #{storageLocation,jdbcType=VARCHAR},
+            </if>
+            <if test="hospitalID != null">
+                #{hospitalID,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        update sj_warehousesecond
+        <set>
+            <if test="amount !=null">
+                Quantity = Quantity + #{amount},
+            </if>
+        </set>
+        where GoodsID = #{goodsID} and HospitalID = #{hospitalID}
+    </update>
+
+    <select id="inquiryQuantityByGoodsID" resultType="java.lang.Integer">
+        select IFNULL((select Quantity from sj_warehousesecond where GoodsID = #{goodsID} and HospitalID = #{hospitalID}), 0)
+    </select>
+
+    <select id="findWarehouse" resultType="java.lang.Integer">
+        select IFNULL((select Quantity from sj_warehousesecond where GoodsID = #{goodsID} and HospitalID = #{hospitalID}), 0)
+    </select>
+
+    <update id="leaveStock" parameterType="com.huijian.rac.bean.SecondLeaveStockListDetail">
+        update sj_warehousesecond set Quantity=Quantity-#{amount}
+        where GoodsID = #{goodsID}
+        and Quantity-#{amount}>0
+        and HospitalID = #{hospitalID}
+    </update>
+</mapper>

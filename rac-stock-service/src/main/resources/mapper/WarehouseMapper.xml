@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.WarehouseMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.Warehouse">
+        <id column="ID" jdbcType="INTEGER" property="ID"></id>
+        <result column="GoodsID" jdbcType="INTEGER" property="goodsID"/>
+        <result column="Quantity" jdbcType="INTEGER" property="quantity"/>
+        <result column="StorgeLocation" jdbcType="VARCHAR" property="storgeLocation"/>
+    </resultMap>
+
+    <select id="findWarehouseByGoodsID" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select IFNULL((select Quantity from sj_warehouse where GoodsID = #{goodsID}), 0)
+    </select>
+
+    <update id="leaveStock" parameterType="com.huijian.rac.bean.LeaveStockListDetail">
+        update sj_warehouse set Quantity=Quantity-#{amount}
+        where GoodsID = #{goodsID} and Quantity-#{amount}>0
+    </update>
+
+    <update id="cancelLeaveStock">
+        update sj_warehouse set Quantity = Quantity + #{amount}
+        where GoodsID = #{goodsID}
+    </update>
+
+    <select id="selectByGoodsID" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(*) from sj_warehouse where GoodsID=#{goodsID}
+    </select>
+
+    <insert id="warehouse" parameterType="com.huijian.rac.bean.Warehouse">
+        insert into sj_warehouse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsID != null">
+                GoodsID,
+            </if>
+            <if test="quantity != null">
+                Quantity,
+            </if>
+            <if test="storgeLocation != null">
+                StorgeLocation,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsID != null">
+                #{goodsID,jdbcType=INTEGER},
+            </if>
+            <if test="quantity != null">
+                #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="storgeLocation != null">
+                #{storgeLocation,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        update sj_warehouse
+        <set>
+            <if test="amount !=null">
+                Quantity = Quantity + #{amount},
+            </if>
+        </set>
+        where GoodsID = #{goodsID}
+    </update>
+
+    <select id="inquiryQuantityByGoodsID" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select IFNULL((select Quantity from sj_warehouse where GoodsID = #{goodsID}), 0)
+    </select>
+</mapper>

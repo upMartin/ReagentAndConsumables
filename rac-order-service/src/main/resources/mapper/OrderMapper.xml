@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.OrderMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.Order">
+        <id column="OrderNo" jdbcType="VARCHAR" property="orderNo"></id>
+        <result column="DepartCode" jdbcType="VARCHAR" property="departCode"/>
+        <result column="CollarPersonID" jdbcType="VARCHAR" property="collarPersonID"/>
+        <result column="AuditPersonID" jdbcType="VARCHAR" property="auditPersonID"/>
+        <result column="Memo" jdbcType="VARCHAR" property="memo"/>
+        <result column="SumPrice" jdbcType="VARCHAR" property="sumPrice"/>
+        <result column="Urgent" jdbcType="INTEGER" property="urgent"/>
+        <result column="OrderState" jdbcType="INTEGER" property="orderState"/>
+        <result column="ArrivalDate" jdbcType="TIMESTAMP" property="arrivalDate"/>
+        <result column="OrderDate" jdbcType="TIMESTAMP" property="orderDate"/>
+        <result column="AuditDate" jdbcType="TIMESTAMP" property="auditDate"/>
+        <result column="OutStockDate" jdbcType="TIMESTAMP" property="outStockDate"/>
+        <result column="HospitalID" jdbcType="VARCHAR" property="hospitalID"/>
+        <collection property="list" ofType="com.huijian.rac.bean.OrderDetail">
+            <id column="Order_No" jdbcType="VARCHAR" property="orderNo"/>
+            <id column="GoodsID" jdbcType="INTEGER" property="goodsID"/>
+            <result column="GoodsName" jdbcType="VARCHAR" property="goodsName"/>
+            <result column="UnitPrice" jdbcType="DECIMAL" property="unitPrice"/>
+            <result column="OrderNum" jdbcType="INTEGER" property="amount"/>
+            <result column="ReceiveNum" jdbcType="INTEGER" property="receiveNum"/>
+            <result column="SendNum" jdbcType="INTEGER" property="sendNum"/>
+            <result column="Memo_memo" jdbcType="VARCHAR" property="memo"/>
+            <result column="RecommendedOrderQuantity" jdbcType="INTEGER" property="recommendedOrderQuantity"/>
+            <result column="LastOrderQuantity" jdbcType="INTEGER" property="lastOrderQuantity"/>
+            <result column="SpecsType" jdbcType="VARCHAR" property="specsType"/>
+            <result column="UnitID" jdbcType="INTEGER" property="unitID"/>
+            <result column="UnarrivedQuantity" jdbcType="INTEGER" property="unarrivedQuantity"/>
+        </collection>
+    </resultMap>
+
+    <select id="getOrderByPage" resultMap="BaseResultMap">
+        SELECT * from sj_order where OrderNo like concat('%',#{keywords},'%')
+        and OrderDate &gt;= #{startDate}
+        and OrderDate &lt; #{endDate}
+        and HospitalID = #{hospitalID}
+        order by OrderDate desc limit #{start}, #{size}
+    </select>
+
+    <insert id="insert" parameterType="com.huijian.rac.bean.Order">
+        insert into sj_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">
+                OrderNo,
+            </if>
+            <if test="departCode != null">
+                DepartCode,
+            </if>
+            <if test="collarPersonID != null">
+                CollarPersonID,
+            </if>
+            <if test="auditPersonID != null">
+                AuditPersonID,
+            </if>
+            <if test="memo != null">
+                Memo,
+            </if>
+            <if test="sumPrice != null">
+                SumPrice,
+            </if>
+            <if test="urgent != null">
+                Urgent,
+            </if>
+            <if test="orderState != null">
+                OrderState,
+            </if>
+            <if test="arrivalDate != null and arrivalDate != ''">
+                ArrivalDate,
+            </if>
+            <if test="orderDate != null and orderDate != ''">
+                OrderDate,
+            </if>
+            <if test="auditDate != null and auditDate != ''">
+                AuditDate,
+            </if>
+            <if test="outStockDate != null and outStockDate != ''">
+                OutStockDate,
+            </if>
+            <if test="hospitalID != null">
+                HospitalID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">
+                #{orderNo},
+            </if>
+            <if test="departCode != null">
+                #{departCode},
+            </if>
+            <if test="collarPersonID != null">
+                #{collarPersonID},
+            </if>
+            <if test="auditPersonID != null">
+                #{auditPersonID},
+            </if>
+            <if test="memo != null">
+                #{memo},
+            </if>
+            <if test="sumPrice != null">
+                #{sumPrice},
+            </if>
+            <if test="urgent != null">
+                #{urgent},
+            </if>
+            <if test="orderState != null">
+                #{orderState},
+            </if>
+            <if test="arrivalDate != null and arrivalDate != ''">
+                #{arrivalDate},
+            </if>
+            <if test="orderDate != null and orderDate != ''">
+                #{orderDate},
+            </if>
+            <if test="auditDate != null and auditDate != ''">
+                #{auditDate},
+            </if>
+            <if test="outStockDate != null and outStockDate != ''">
+                #{outStockDate},
+            </if>
+            <if test="hospitalID != null">
+                #{hospitalID},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="inquiryOneYear" resultType="java.lang.Integer">
+        select count(*) from sj_order where YEAR(OrderDate)=YEAR(NOW());
+    </select>
+
+    <select id="inquiryLastOrder" resultMap="BaseResultMap">
+        select * from sj_order where HospitalID = #{hospitalID} order by OrderDate DESC limit 1;
+    </select>
+
+    <select id="inquiryLastOneYearOrder" resultMap="BaseResultMap">
+        select * from sj_order where HospitalID = #{hospitalID} and now() >= DATE_SUB(CURDATE(), INTERVAL 12 month)
+    </select>
+
+    <delete id="deleteOrderByOrderNo">
+        delete from sj_order where OrderNo in
+        <foreach collection="orderNos" open="(" close=")" separator="," item="orderNo">
+            #{orderNo}
+        </foreach>
+    </delete>
+
+    <update id="update" parameterType="com.huijian.rac.bean.Order">
+        update sj_order
+        <trim prefix="set" suffixOverrides=",">
+            <if test="departCode != null and departCode!=''">
+                DepartCode = #{departCode},
+            </if>
+            <if test="collarPersonID != null and collarPersonID!=''">
+                CollarPersonID = #{collarPersonID},
+            </if>
+            <if test="auditPersonID != null and auditPersonID!=''">
+                AuditPersonID = #{auditPersonID},
+            </if>
+            <if test="memo != null">
+                Memo = #{memo},
+            </if>
+            <if test="sumPrice != null and sumPrice!=''">
+                SumPrice = #{sumPrice},
+            </if>
+            <if test="urgent != null">
+                Urgent = #{urgent},
+            </if>
+            <if test="orderState != null">
+                OrderState = #{orderState},
+            </if>
+            <if test="arrivalDate != null and arrivalDate != ''">
+                ArrivalDate = #{arrivalDate},
+            </if>
+            <if test="orderDate != null and orderDate != ''">
+                OrderDate = #{orderDate},
+            </if>
+            <if test="auditDate != null and auditDate != ''">
+                AuditDate = #{auditDate},
+            </if>
+            <if test="outStockDate != null and outStockDate != ''">
+                OutStockDate = #{outStockDate},
+            </if>
+            <if test="hospitalID != null and hospitalID != ''">
+                HospitalID = #{hospitalID},
+            </if>
+        </trim>
+        where OrderNo = #{orderNo}
+    </update>
+
+    <update id="updateOrderState" parameterType="com.huijian.rac.bean.Order">
+        update sj_order set OrderState = #{order.orderState}, OrderDate = #{order.orderDate}
+        where OrderNo = #{order.orderNo}
+    </update>
+
+    <update id="updateOrderStateByOrderNo">
+        update sj_order set OrderState = #{orderState}, OutStockDate = #{orderDate}
+        where OrderNo = #{orderNo}
+    </update>
+
+    <select id="inquiryOrderState" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select OrderState from sj_order where OrderNo = #{orderNo}
+    </select>
+</mapper>

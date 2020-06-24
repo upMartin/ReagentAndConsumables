@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.SecondLeaveStockListDetailMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.SecondLeaveStockListDetail">
+        <id column="GoodsID" jdbcType="INTEGER" property="goodsID"/>
+        <id column="LeaveStockNo" jdbcType="INTEGER" property="leaveStockNo"/>
+        <id column="HospitalID" jdbcType="VARCHAR" property="hospitalID"/>
+        <result column="GoodsName" jdbcType="VARCHAR" property="name"/>
+        <result column="Brand" jdbcType="VARCHAR" property="brand"/>
+        <result column="Specification" jdbcType="VARCHAR" property="specification"/>
+        <result column="Unit" jdbcType="VARCHAR" property="unit"/>
+        <result column="SecondaryAccounting" jdbcType="VARCHAR" property="secondaryAccounting"/>
+        <result column="Amount" jdbcType="INTEGER" property="amount"/>
+        <result column="UnitPrice" jdbcType="DECIMAL" property="unitPrice"/>
+        <result column="Sum" jdbcType="DECIMAL" property="sum"/>
+        <result column="ProductionBatch" jdbcType="VARCHAR" property="productionBatch"/>
+        <result column="TermOfValidity" jdbcType="TIMESTAMP" property="termOfValidity"/>
+        <result column="RegistrationNumber" jdbcType="VARCHAR" property="registrationNumber"/>
+        <result column="Pack" jdbcType="VARCHAR" property="pack"/>
+        <result column="Company" jdbcType="VARCHAR" property="company"/>
+        <result column="Origin" jdbcType="VARCHAR" property="origin"/>
+    </resultMap>
+
+    <delete id="deleteGoodsRecordByGid">
+        delete from sj_secondleavestocklistdetail where GOODSID in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+        and LeaveStockNo = #{leaveStockNo}
+        and HOSPITALID = #{hospitalID}
+    </delete>
+
+    <select id="inquirySecondLeaveStockListDetail" parameterType="com.huijian.rac.bean.OutboundSecondRecord" resultMap="BaseResultMap">
+        select * from sj_secondleavestocklistdetail where LeaveStockNo = #{leaveStockNo}
+        and HOSPITALID = #{hospitalID}
+    </select>
+
+    <insert id="wareHouse" parameterType="com.huijian.rac.bean.SecondLeaveStockListDetail">
+        insert into sj_secondleavestocklistdetail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            GoodsID,
+            GoodsName,
+            <if test="brand != null">
+                Brand,
+            </if>
+            <if test="specification != null">
+                Specification,
+            </if>
+            <if test="unit != null">
+                unit,
+            </if>
+            <if test="secondaryAccounting != null">
+                SecondaryAccounting,
+            </if>
+            Amount,
+            UnitPrice,
+            Sum,
+            <if test="productionBatch != null">
+                ProductionBatch,
+            </if>
+            <if test="termOfValidity != null and termOfValidity != ''">
+                TermOfValidity,
+            </if>
+            <if test="registrationNumber != null">
+                RegistrationNumber,
+            </if>
+            <if test="pack != null">
+                Pack,
+            </if>
+            <if test="company != null">
+                Company,
+            </if>
+            <if test="origin != null">
+                Origin,
+            </if>
+            <if test="leaveStockNo != null">
+                LeaveStockNo,
+            </if>
+            <if test="hospitalID != null">
+                HospitalID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{goodsID,jdbcType=INTEGER},
+            #{name,jdbcType=VARCHAR},
+            <if test="brand != null">
+                #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="specification != null">
+                #{specification,jdbcType=VARCHAR},
+            </if>
+            <if test="unit != null">
+                #{unit,jdbcType=VARCHAR},
+            </if>
+            <if test="secondaryAccounting != null">
+                #{secondaryAccounting,jdbcType=VARCHAR},
+            </if>
+            #{amount,jdbcType=VARCHAR},
+            #{unitPrice,jdbcType=VARCHAR},
+            #{sum,jdbcType=VARCHAR},
+            <if test="productionBatch != null">
+                #{productionBatch,jdbcType=VARCHAR},
+            </if>
+            <if test="termOfValidity!=null and termOfValidity != ''">
+                #{termOfValidity,jdbcType=TIMESTAMP},
+            </if>
+            <if test="registrationNumber != null">
+                #{registrationNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="pack != null">
+                #{pack,jdbcType=VARCHAR},
+            </if>
+            <if test="company != null">
+                #{company,jdbcType=VARCHAR},
+            </if>
+            <if test="origin != null">
+                #{origin,jdbcType=VARCHAR},
+            </if>
+            <if test="leaveStockNo != null">
+                #{leaveStockNo,jdbcType=INTEGER},
+            </if>
+            <if test="hospitalID != null">
+                #{hospitalID,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.huijian.rac.bean.LeaveStockListDetail">
+        update sj_secondleavestocklistdetail
+        <set>
+            <if test="name!=null">
+                GoodsName=#{name,jdbcType=VARCHAR},
+            </if>
+            <if test="brand!=null">
+                Brand=#{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="specification!=null">
+                Specification=#{specification,jdbcType=VARCHAR},
+            </if>
+            <if test="unit!=null">
+                Unit=#{unit,jdbcType=VARCHAR},
+            </if>
+            <if test="secondaryAccounting!=null">
+                SecondaryAccounting=#{secondaryAccounting,jdbcType=VARCHAR},
+            </if>
+            <if test="amount!=null">
+                Amount=#{amount,jdbcType=VARCHAR},
+            </if>
+            <if test="unitPrice!=null">
+                UnitPrice=#{unitPrice,jdbcType=VARCHAR},
+            </if>
+            <if test="sum!=null">
+                Sum=#{sum,jdbcType=VARCHAR},
+            </if>
+            <if test="productionBatch!=null">
+                ProductionBatch=#{productionBatch,jdbcType=VARCHAR},
+            </if>
+            <if test="registrationNumber!=null">
+                RegistrationNumber=#{registrationNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="termOfValidity!=null">
+                TermOfValidity=#{termOfValidity,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pack!=null">
+                Pack=#{pack,jdbcType=VARCHAR},
+            </if>
+            <if test="company!=null">
+                Company=#{company,jdbcType=VARCHAR},
+            </if>
+            <if test="origin!=null">
+                Origin=#{origin,jdbcType=VARCHAR},
+            </if>
+            <if test="origin!=null">
+                Origin=#{origin,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where GoodsID = #{goodsID} and LeaveStockNo = #{leaveStockNo} and HospitalID = #{hospitalID}
+    </update>
+
+    <delete id="deletesecondLeaveStockListDetail">
+        delete from sj_secondleavestocklistdetail
+        where LeaveStockNo = #{leaveStockNo}
+        and HospitalID = #{hospitalID}
+    </delete>
+</mapper>

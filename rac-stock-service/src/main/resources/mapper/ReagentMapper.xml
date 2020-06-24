@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.ReagentMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.Reagent">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+    </resultMap>
+
+    <select id="getReagentByPage" resultMap="BaseResultMap">
+        SELECT * from Reagent where name like concat('%',#{keywords},'%')
+        order by id desc limit #{start}, #{size}
+    </select>
+
+    <delete id="deleteById">
+        delete from Reagent where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

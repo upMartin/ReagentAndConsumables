@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.OutboundSecondRecordMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.OutboundSecondRecord">
+        <id column="LeaveStockNo" jdbcType="INTEGER" property="leaveStockNo"/>
+        <id column="HospitalID" jdbcType="VARCHAR" property="hospitalID"/>
+        <result column="LeaveStockDate" jdbcType="TIMESTAMP" property="leaveStockDate"/>
+        <result column="PersonID" jdbcType="VARCHAR" property="personID"/>
+        <result column="Memo" jdbcType="VARCHAR" property="memo"/>
+        <result column="DEPARTCODE" jdbcType="VARCHAR" property="departCode"/>
+        <result column="Supervisor" jdbcType="VARCHAR" property="supervisor"/>
+        <result column="Sum" jdbcType="DECIMAL" property="sum"/>
+        <result column="BusinessType" jdbcType="VARCHAR" property="businessType"/>
+        <result column="TXM" jdbcType="VARCHAR" property="TXM"/>
+        <result column="LeaveStockState" jdbcType="VARCHAR" property="leaveStockState"/>
+        <collection property="list" ofType="com.huijian.rac.bean.SecondLeaveStockListDetail">
+        </collection>
+    </resultMap>
+
+    <select id="getOutboundSecondRecordByPage" resultMap="BaseResultMap">
+        SELECT * from sj_leavestocklistsecond where LeaveStockNo like concat('%',#{keywords},'%')
+        and LeaveStockDate &gt;= #{startDate}
+        and LeaveStockDate &lt; #{endDate}
+        and HospitalID = #{hospitalID}
+        order by LeaveStockNo desc limit #{start}, #{size}
+    </select>
+
+    <select id="inquiryOneYear" resultType="java.lang.Integer">
+        select count(*) from sj_leavestocklistsecond where YEAR(LeaveStockDate)=YEAR(NOW());
+    </select>
+
+    <insert id="wareHouse" parameterType="com.huijian.rac.bean.OutboundSecondRecord">
+        insert into sj_leavestocklistsecond
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="leaveStockNo != null">
+                LeaveStockNo,
+            </if>
+            <if test="hospitalID != null">
+                HospitalID,
+            </if>
+            <if test="leaveStockDate != null">
+                LeaveStockDate,
+            </if>
+            <if test="personID != null">
+                PersonID,
+            </if>
+            <if test="memo != null">
+                Memo,
+            </if>
+            <if test="departCode != null">
+                DEPARTCODE,
+            </if>
+            <if test="supervisor != null">
+                Supervisor,
+            </if>
+            <if test="sum != null">
+                Sum,
+            </if>
+            <if test="businessType != null">
+                BusinessType
+            </if>
+            <if test="TXM != null">
+                TXM
+            </if>
+            <if test="leaveStockState != null">
+                LeaveStockState
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="leaveStockNo != null">
+                #{leaveStockNo,jdbcType=INTEGER},
+            </if>
+            <if test="hospitalID != null">
+                #{hospitalID,jdbcType=VARCHAR},
+            </if>
+            <if test="leaveStockDate != null">
+                #{leaveStockDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="personID != null">
+                #{personID,jdbcType=VARCHAR},
+            </if>
+            <if test="memo != null">
+                #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="departCode != null">
+                #{departCode,jdbcType=VARCHAR},
+            </if>
+            <if test="supervisor != null">
+                #{supervisor,jdbcType=VARCHAR},
+            </if>
+            <if test="sum != null">
+                #{sum,jdbcType=DECIMAL},
+            </if>
+            <if test="businessType != null">
+                #{businessType,jdbcType=DECIMAL},
+            </if>
+            <if test="TXM != null">
+                #{TXM,jdbcType=VARCHAR},
+            </if>
+            <if test="leaveStockState != null">
+                #{leaveStockState,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.huijian.rac.bean.OutboundRecord">
+        update sj_leavestocklistsecond
+        <set>
+            <if test="leaveStockNo!=null">
+                LeaveStockNo=#{leaveStockNo,jdbcType=INTEGER},
+            </if>
+            <if test="leaveStockDate!=null">
+                LeaveStockDate=#{leaveStockDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="personID!=null">
+                PersonID=#{personID,jdbcType=VARCHAR},
+            </if>
+            <if test="memo!=null">
+                Memo=#{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="departCode!=null">
+                DEPARTCODE=#{departCode,jdbcType=VARCHAR},
+            </if>
+            <if test="supervisor!=null">
+                Supervisor=#{supervisor,jdbcType=VARCHAR},
+            </if>
+            <if test="sum!=null">
+                Sum=#{sum,jdbcType=DECIMAL},
+            </if>
+            <if test="businessType != null">
+                BusinessType=#{businessType,jdbcType=DECIMAL},
+            </if>
+            <if test="TXM!=null">
+                TXM=#{TXM,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where LeaveStockNo = #{leaveStockNo}
+    </update>
+
+    <delete id="deleteOutboundSecondRecord">
+        delete from sj_leavestocklistsecond
+        where LeaveStockNo = #{leaveStockNo}
+        and HospitalID = #{hospitalID}
+    </delete>
+
+    <update id="updateLeaveStockState">
+        update sj_leavestocklistsecond
+        set LeaveStockState = #{leaveStockState}
+        where LeaveStockNo = #{leaveStockNo}
+        and HospitalID = #{hospitalID}
+    </update>
+</mapper>

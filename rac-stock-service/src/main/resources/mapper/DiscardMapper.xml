@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.DiscardMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.Discard">
+        <id column="DiscardNo" jdbcType="VARCHAR" property="discardNo"></id>
+        <result column="DiscardDate" jdbcType="DATE" property="discardDate"/>
+        <result column="DepartCode" jdbcType="VARCHAR" property="departCode"/>
+        <result column="PersonID" jdbcType="VARCHAR" property="personID"/>
+        <result column="PersonName" jdbcType="VARCHAR" property="personName"/>
+        <result column="Reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="SumPrice" jdbcType="VARCHAR" property="sumPrice"/>
+        <result column="LevelID" jdbcType="VARCHAR" property="levelID"/>
+        <result column="HospitalID" jdbcType="VARCHAR" property="hospitalID"/>
+    </resultMap>
+
+    <select id="inquiryOneDay" resultType="java.lang.Integer">
+        select count(*) from sj_discard where DiscardDate>CURRENT_DATE and HospitalID = #{hospitalID};
+    </select>
+
+    <select id="getDiscardsByPage" resultMap="BaseResultMap">
+        SELECT sd.*, pd.PERSONNAME PersonName from sj_discard as sd INNER JOIN pub_doctor as pd on
+        sd.DiscardNo like concat('%',#{keywords},'%')
+        and sd.DiscardDate &gt;= #{startDate}
+        and sd.DiscardDate &lt; #{endDate}
+        and sd.PersonID = pd.PERSONID
+        order by sd.DiscardDate desc limit #{start}, #{size}
+    </select>
+
+    <insert id="addDiscard" parameterType="com.huijian.rac.bean.Discard">
+        insert into sj_discard
+        (DiscardNo,DiscardDate,DepartCode,PersonID,Reason,SumPrice,LevelID,HospitalID)
+        values (#{discardNo},#{discardDate},#{departCode},#{personID},#{reason},#{sumPrice},#{levelID},#{hospitalID})
+    </insert>
+</mapper>

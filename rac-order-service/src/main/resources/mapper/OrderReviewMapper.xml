@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.OrderReviewMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.Order">
+        <id column="OrderNo" jdbcType="VARCHAR" property="orderNo"></id>
+        <result column="DepartCode" jdbcType="VARCHAR" property="departCode"/>
+        <result column="CollarPersonID" jdbcType="VARCHAR" property="collarPersonID"/>
+        <result column="AuditPersonID" jdbcType="VARCHAR" property="auditPersonID"/>
+        <result column="Memo" jdbcType="VARCHAR" property="memo"/>
+        <result column="SumPrice" jdbcType="VARCHAR" property="sumPrice"/>
+        <result column="Urgent" jdbcType="INTEGER" property="urgent"/>
+        <result column="OrderState" jdbcType="INTEGER" property="orderState"/>
+        <result column="ArrivalDate" jdbcType="TIMESTAMP" property="arrivalDate"/>
+        <result column="OrderDate" jdbcType="TIMESTAMP" property="orderDate"/>
+        <result column="AuditDate" jdbcType="TIMESTAMP" property="auditDate"/>
+        <result column="OutStockDate" jdbcType="TIMESTAMP" property="outStockDate"/>
+        <result column="HospitalID" jdbcType="VARCHAR" property="hospitalID"/>
+        <collection property="list" ofType="com.huijian.rac.bean.OrderDetail">
+            <id column="Order_No" jdbcType="VARCHAR" property="orderNo"/>
+            <id column="GoodsID" jdbcType="INTEGER" property="goodsID"/>
+            <result column="GoodsName" jdbcType="VARCHAR" property="goodsName"/>
+            <result column="UnitPrice" jdbcType="DECIMAL" property="unitPrice"/>
+            <result column="OrderNum" jdbcType="INTEGER" property="amount"/>
+            <result column="ReceiveNum" jdbcType="INTEGER" property="receiveNum"/>
+            <result column="SendNum" jdbcType="INTEGER" property="sendNum"/>
+            <result column="Memo_memo" jdbcType="VARCHAR" property="memo"/>
+            <result column="RecommendedOrderQuantity" jdbcType="INTEGER" property="recommendedOrderQuantity"/>
+            <result column="LastOrderQuantity" jdbcType="INTEGER" property="lastOrderQuantity"/>
+            <result column="SpecsType" jdbcType="VARCHAR" property="specsType"/>
+            <result column="UnitID" jdbcType="INTEGER" property="unitID"/>
+            <result column="UnarrivedQuantity" jdbcType="INTEGER" property="unarrivedQuantity"/>
+        </collection>
+    </resultMap>
+
+    <select id="getOrderByPage" resultMap="BaseResultMap">
+        SELECT * from sj_order where OrderNo like concat('%',#{keywords},'%')
+        and OrderDate &gt;= #{startDate}
+        and OrderDate &lt; #{endDate}
+        and OrderState != 0
+        order by OrderDate desc limit #{start}, #{size}
+    </select>
+
+    <update id="updateOrderState">
+        update sj_order set OrderState=2 where OrderNo = #{orderNo}
+    </update>
+</mapper>

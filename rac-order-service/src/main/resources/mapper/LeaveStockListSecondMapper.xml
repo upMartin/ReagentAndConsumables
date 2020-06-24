@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.LeaveStockListSecondMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.LeaveStockListSecond">
+        <id column="ID" jdbcType="INTEGER" property="ID"/>
+        <id column="HospitalID" jdbcType="VARCHAR" property="hospitalID"/>
+        <result column="GoodsID" jdbcType="INTEGER" property="goodsID"/>
+        <result column="PersonID" jdbcType="VARCHAR" property="personID"/>
+        <result column="Memo" jdbcType="VARCHAR" property="memo"/>
+        <result column="UnitPrice" jdbcType="DECIMAL" property="unitPrice"/>
+        <result column="TXM" jdbcType="VARCHAR" property="TXM"/>
+        <result column="Quantity" jdbcType="VARCHAR" property="quantity"/>
+        <result column="PickDate" jdbcType="TIMESTAMP" property="pickDate"/>
+    </resultMap>
+
+    <select id="inquiryLastOneYear" resultMap="BaseResultMap">
+        select * from sj_secondleavestocklistdetail where HospitalID = #{hospitalID} and GoodsID in
+        <foreach collection="goodsIDs" separator="," open="(" close=")" item="goodsID">
+            #{goodsID}
+        </foreach>
+        and now() >= DATE_SUB(CURDATE(), INTERVAL 12 month)
+    </select>
+
+</mapper>

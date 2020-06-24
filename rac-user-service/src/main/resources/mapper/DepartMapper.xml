@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.DepartMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.Depart">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="departID" jdbcType="VARCHAR" property="departID"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="parentID" jdbcType="VARCHAR" property="parentID"/>
+    </resultMap>
+    <select id="getDepartsByPageSize" resultMap="BaseResultMap">
+        select * from depart where name like concat('%',#{keywords},'%')
+        <if test="departID!=null and departID !=''">
+            and departID = #{departID}
+        </if>
+        order by id limit #{start}, #{size}
+    </select>
+
+    <insert id="addDepart" parameterType="com.huijian.rac.bean.Depart">
+        insert into depart (name, departID, telephone, address) values(#{name},#{departID},#{telephone},#{address})
+    </insert>
+
+    <update id="updateDepart" parameterType="com.huijian.rac.bean.Depart">
+        update depart
+        <set>
+            <if test="name!=null">
+                name=#{name,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone!=null">
+                telephone=#{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="departID!=null">
+                departID=#{departID,jdbcType=VARCHAR},
+            </if>
+            <if test="address!=null">
+                address=#{address,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from depart where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

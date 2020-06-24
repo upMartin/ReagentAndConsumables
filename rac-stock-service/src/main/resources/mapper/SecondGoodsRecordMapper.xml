@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.SecondGoodsRecordMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.SecondGoodsRecord">
+        <id column="GOODSID" jdbcType="INTEGER" property="goodsID"/>
+        <id column="WAREHOUSESECONDRECORDID" jdbcType="INTEGER" property="warehouseSecondRecordID"/>
+        <id column="HOSPITALID" jdbcType="VARCHAR" property="hospitalID"/>
+        <result column="GOODSNAME" jdbcType="VARCHAR" property="name"/>
+        <result column="BRAND" jdbcType="VARCHAR" property="brand"/>
+        <result column="SPECIFICATION" jdbcType="VARCHAR" property="specification"/>
+        <result column="UNIT" jdbcType="VARCHAR" property="unit"/>
+        <result column="SECONDARYACCOUNTING" jdbcType="VARCHAR" property="secondaryAccounting"/>
+        <result column="AMOUNT" jdbcType="INTEGER" property="amount"/>
+        <result column="UNITPRICE" jdbcType="DECIMAL" property="unitPrice"/>
+        <result column="SUM" jdbcType="DECIMAL" property="sum"/>
+        <result column="PRODUCTIONBATCH" jdbcType="VARCHAR" property="productionBatch"/>
+        <result column="TERMOFVALIDITY" jdbcType="TIMESTAMP" property="termOfValidity"/>
+        <result column="REGISTRATIONNUMBER" jdbcType="VARCHAR" property="registrationNumber"/>
+        <result column="PACK" jdbcType="VARCHAR" property="pack"/>
+        <result column="COMPANY" jdbcType="VARCHAR" property="company"/>
+        <result column="ORIGIN" jdbcType="VARCHAR" property="origin"/>
+    </resultMap>
+
+    <insert id="wareHouse" parameterType="com.huijian.rac.bean.SecondGoodsRecord">
+        insert into sj_secondgoodsrecord
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            GOODSID,
+            HOSPITALID,
+            GOODSNAME,
+            <if test="brand != null">
+                BRAND,
+            </if>
+            <if test="specification != null">
+                SPECIFICATION,
+            </if>
+            <if test="unit != null">
+                UNIT,
+            </if>
+            <if test="secondaryAccounting != null">
+                SECONDARYACCOUNTING,
+            </if>
+            AMOUNT,
+            UNITPRICE,
+            SUM,
+            <if test="productionBatch != null">
+                PRODUCTIONBATCH,
+            </if>
+            <if test="termOfValidity != null and termOfValidity != ''">
+                TERMOFVALIDITY,
+            </if>
+            <if test="registrationNumber != null">
+                REGISTRATIONNUMBER,
+            </if>
+            <if test="pack != null">
+                PACK,
+            </if>
+            <if test="company != null">
+                COMPANY,
+            </if>
+            <if test="origin != null">
+                ORIGIN,
+            </if>
+            <if test="warehouseSecondRecordID != null">
+                WAREHOUSESECONDRECORDID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{goodsID,jdbcType=INTEGER},
+            #{hospitalID,jdbcType=VARCHAR},
+            #{name,jdbcType=VARCHAR},
+            <if test="brand != null">
+                #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="specification != null">
+                #{specification,jdbcType=VARCHAR},
+            </if>
+            <if test="unit != null">
+                #{unit,jdbcType=VARCHAR},
+            </if>
+            <if test="secondaryAccounting != null">
+                #{secondaryAccounting,jdbcType=VARCHAR},
+            </if>
+            #{amount,jdbcType=VARCHAR},
+            #{unitPrice,jdbcType=VARCHAR},
+            #{sum,jdbcType=VARCHAR},
+            <if test="productionBatch != null">
+                #{productionBatch,jdbcType=VARCHAR},
+            </if>
+            <if test="termOfValidity!=null and termOfValidity != ''">
+                #{termOfValidity,jdbcType=TIMESTAMP},
+            </if>
+            <if test="registrationNumber != null">
+                #{registrationNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="pack != null">
+                #{pack,jdbcType=VARCHAR},
+            </if>
+            <if test="company != null">
+                #{company,jdbcType=VARCHAR},
+            </if>
+            <if test="origin != null">
+                #{origin,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseSecondRecordID != null">
+                #{warehouseSecondRecordID,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteSecondGoodsRecordByWid">
+        delete from sj_secondgoodsrecord where WAREHOUSESECONDRECORDID in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+        and HOSPITALID = #{hospitalID}
+    </delete>
+
+    <select id="inquirySecondGoodsRecordByID" resultMap="BaseResultMap">
+        select * from sj_secondgoodsrecord where
+        WAREHOUSESECONDRECORDID = #{warehouseSecondRecordID}
+        and HOSPITALID = #{hospitalID}
+    </select>
+
+    <delete id="deleteGoodsRecordByGid">
+        delete from sj_secondgoodsrecord where GOODSID in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+        and WAREHOUSESECONDRECORDID = #{warehouseSecondRecordID}
+        and HOSPITALID = #{hospitalID}
+    </delete>
+
+    <update id="update" parameterType="com.huijian.rac.bean.SecondGoodsRecord">
+        update sj_secondgoodsrecord
+        <set>
+            <if test="name!=null">
+                GOODSNAME=#{name,jdbcType=VARCHAR},
+            </if>
+            <if test="brand!=null">
+                BRAND=#{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="specification!=null">
+                SPECIFICATION=#{specification,jdbcType=VARCHAR},
+            </if>
+            <if test="unit!=null">
+                UNIT=#{unit,jdbcType=VARCHAR},
+            </if>
+            <if test="secondaryAccounting!=null">
+                SECONDARYACCOUNTING=#{secondaryAccounting,jdbcType=VARCHAR},
+            </if>
+            <if test="amount!=null">
+                AMOUNT=#{amount,jdbcType=VARCHAR},
+            </if>
+            <if test="unitPrice!=null">
+                UNITPRICE=#{unitPrice,jdbcType=VARCHAR},
+            </if>
+            <if test="sum!=null">
+                SUM=#{sum,jdbcType=VARCHAR},
+            </if>
+            <if test="productionBatch!=null">
+                PRODUCTIONBATCH=#{productionBatch,jdbcType=VARCHAR},
+            </if>
+            <if test="registrationNumber!=null">
+                REGISTRATIONNUMBER=#{registrationNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="termOfValidity!=null">
+                TERMOFVALIDITY=#{termOfValidity,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pack!=null">
+                PACK=#{pack,jdbcType=VARCHAR},
+            </if>
+            <if test="company!=null">
+                COMPANY=#{company,jdbcType=VARCHAR},
+            </if>
+            <if test="origin!=null">
+                ORIGIN=#{origin,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where GOODSID = #{goodsID}
+        and WAREHOUSESECONDRECORDID = #{warehouseSecondRecordID}
+        and HOSPITALID = #{hospitalID}
+    </update>
+</mapper>

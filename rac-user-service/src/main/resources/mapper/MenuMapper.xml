@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.MenuMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.Menu">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="path" property="path" jdbcType="VARCHAR"/>
+        <result column="component" property="component" javaType="java.lang.Object"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="iconCls" property="iconCls" jdbcType="VARCHAR"/>
+        <result column="keepAlive" property="keepAlive" jdbcType="BIT"/>
+        <result column="parentId" property="parentId" jdbcType="INTEGER"/>
+        <association property="meta" javaType="com.huijian.rac.bean.MenuMeta">
+            <result column="keepAlive" property="keepAlive"/>
+            <result column="requireAuth" property="requireAuth"/>
+        </association>
+        <collection property="roles" ofType="com.huijian.rac.bean.Role">
+            <id column="id" property="ROLEID"/>
+            <result column="name" property="ROLENAME"/>
+        </collection>
+        <collection property="children" ofType="com.huijian.rac.bean.Menu">
+            <id column="id2" property="id"/>
+            <result column="path2" property="path" jdbcType="VARCHAR"/>
+            <result column="component2" property="component" jdbcType="VARCHAR"/>
+            <result column="name2" property="name" jdbcType="VARCHAR"/>
+            <result column="iconCls2" property="iconCls" jdbcType="VARCHAR"/>
+            <association property="meta" javaType="com.huijian.rac.bean.MenuMeta">
+                <result column="keepAlive2" property="keepAlive"/>
+                <result column="requireAuth2" property="requireAuth"/>
+            </association>
+            <collection property="children" ofType="com.huijian.rac.bean.Menu">
+                <id column="id3" property="id"/>
+                <result column="name3" property="name" jdbcType="VARCHAR"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="getAllMenu" resultMap="BaseResultMap">
+        select m.*,r.ROLEID as rid,r.ROLENAME as rname,r.ROLENAME as rnamezh from sj_menu m left join sj_menu_role mr on m.`id`=mr.`mid` left join pub_role r on mr.`rid`=r.ROLEID WHERE m.`enabled`=true order by m.`id` desc
+    </select>
+    <select id="getMenusByUserId" resultMap="BaseResultMap">
+        select m1.`id`,m1.`path`, m1.`component`,m1.`iconCls`, m1.`name`, m1.`requireAuth`, m2.`component` as component2,
+        m2.`iconCls` as iconCls2, m2.`keepAlive` as keepAlive2, m2.`name` as name2, m2.`path` as path2, m2.`requireAuth` as requireAuth2
+        from sj_menu m1,sj_menu m2 where m1.`id`=m2.`parentId` and m1.`id`!=1 and m2.`id` in(select mr.`mid` from pub_doctor d,sj_menu_role mr
+        where d.ROLEID=mr.`rid` and d.PERSONID=#{id}) and m2.`enabled`=true order by m1.`id`,m2.`id`
+    </select>
+    <select id="menuTree" resultMap="BaseResultMap">
+            select m1.`id`,m1.`name`,m2.`id` as id2,m2.`name` as name2,m3.`id` as id3,m3.`name` as name3 from menu m1,menu m2,menu m3 where m1.`id`=m2.`parentId` and m2.`id`=m3.`parentId` and m3.`enabled`=true
+        </select>
+    <select id="getMenusByRid" resultType="Long">
+        SELECT mid from menu_role WHERE rid=#{rid}
+    </select>
+</mapper>
