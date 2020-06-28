@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface OrderDetailMapper {
-    List<OrderDetail> inquiryByOrderNo(@Param("orderNo") String orderNo,
+    List<OrderDetail> inquiryByOrderNo(
                          @Param("goodsIDs") Integer[] goodsIDs);
 
     int insert(OrderDetail orderDetail);

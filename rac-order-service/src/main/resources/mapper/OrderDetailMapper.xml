@@ -21,10 +21,13 @@
     </resultMap>
 
     <select id="inquiryByOrderNo" resultMap="BaseResultMap">
-        select * from sj_orderdetail where OrderNo = #{orderNo} and GoodsID in
+        select * from sj_orderdetail sod, sj_order so where GoodsID in
         <foreach collection="goodsIDs" separator="," open="(" close=")" item="goodsID">
             #{goodsID}
         </foreach>
+        and sod.OrderNo = so.OrderNo
+        and so.OrderState >= 1
+        order by OrderDate limit 1
     </select>
 
     <insert id="insert">

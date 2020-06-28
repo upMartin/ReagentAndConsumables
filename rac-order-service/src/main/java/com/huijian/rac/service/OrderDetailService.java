@@ -21,8 +21,8 @@ public class OrderDetailService {
      * @param goodsID
      * @return
      */
-    public List<OrderDetail> inquriyByOrderNo(String orderNo, Integer[] goodsID) {
-        return orderDetailMapper.inquiryByOrderNo(orderNo, goodsID);
+    public List<OrderDetail> inquriyByOrderNo(Integer[] goodsID) {
+        return orderDetailMapper.inquiryByOrderNo(goodsID);
     }
 
     /**

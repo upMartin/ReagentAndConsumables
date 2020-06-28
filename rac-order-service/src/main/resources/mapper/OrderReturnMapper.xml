@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huijian.rac.mapper.OrderReturnMapper">
+    <resultMap id="BaseResultMap" type="com.huijian.rac.bean.ReturnGoods">
+        <id column="return_goods_no" jdbcType="VARCHAR" property="returnGoodsNo"></id>
+        <result column="return_goods_date" jdbcType="DATE" property="returnGoodsDate"/>
+        <result column="collar_person_id" jdbcType="VARCHAR" property="collarPersonID"/>
+        <result column="collar_person_name" jdbcType="VARCHAR" property="collarPersonName"/>
+        <result column="audit_person_id" jdbcType="VARCHAR" property="auditPersonID"/>
+        <result column="audit_person_name" jdbcType="VARCHAR" property="auditPersonName"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="sumprice" jdbcType="DECIMAL" property="sumPrice"/>
+        <result column="return_goods_state" jdbcType="INTEGER" property="returnGoodsState"/>
+        <result column="hospital_id" jdbcType="VARCHAR" property="hospitalID"/>
+        <result column="hospital_name" jdbcType="VARCHAR" property="hospitalName"/>
+    </resultMap>
+
+    <select id="getReturnGoodsByPage" resultMap="BaseResultMap">
+        SELECT a.*, b.PERSONNAME audit_person_name, ph.ORGANIZATION  hospital_name from
+        (SELECT sr.*, pd.PERSONNAME collar_person_name from sj_returngoods as sr INNER JOIN pub_doctor as pd on
+        sr.return_goods_no like concat('%',#{keywords},'%')
+        and sr.return_goods_date &gt;= #{startDate}
+        and sr.return_goods_date &lt; #{endDate}
+        and sr.collar_person_id = pd.PERSONID
+        ) as a left join pub_doctor as b on a.audit_person_id = b.PERSONID inner join pub_hospitalid ph on a.hospital_id = ph.HOSPITALID
+        order by a.return_goods_date desc limit #{start}, #{size}
+    </select>
+
+    <update id="updateReturnGoodsState" parameterType="com.huijian.rac.bean.ReturnGoods">
+        update sj_returngoods set return_goods_state = 1 where return_goods_no = #{returnGoodsNo}
+    </update>
+</mapper>

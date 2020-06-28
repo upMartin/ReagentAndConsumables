@@ -16,5 +16,6 @@ public interface ReturnGoodsMapper {
                                            Integer size,
                                            String keywords,
                                            Date startDate,
-                                           Date endDate,String hospitalID);
+                                           Date endDate,
+                                           String hospitalID);
 }

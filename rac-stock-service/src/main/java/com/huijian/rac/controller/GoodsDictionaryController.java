@@ -1,5 +1,6 @@
 package com.huijian.rac.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huijian.rac.bean.*;
 import com.huijian.rac.service.*;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -222,11 +223,14 @@ public class GoodsDictionaryController {
             return e;
         }).collect(Collectors.toList());
         HospitalIDAndGood hospitalIDAndGood = new HospitalIDAndGood(hospitalID,list);
-        List<Integer> num = (List<Integer>) (orderStateService.inquiryLastOrderQuantity(hospitalIDAndGood)).get("num");
+        List<Good> list1 = (List<Good>) ((orderStateService.inquiryLastOrderQuantity(hospitalIDAndGood)).get("num"));
         List<Integer> recommendedOrderQuantity = (List<Integer>) ((orderStateService.inquiryRecommendedOrderQuantity(hospitalIDAndGood)).get("sum"));
+        ObjectMapper mapper = new ObjectMapper();
         for (int i=0;i<list.size();i++){
-            list.get(i).setLastOrderQuantity(num.get(i));
-            list.get(i).setRecommendedOrderQuantity(recommendedOrderQuantity.get(i));
+            Good good = mapper.convertValue(list1.get(i),Good.class);
+            list.get(i).setLastOrderQuantity(good.getLastOrderQuantity());
+            /*(list.get(i)).setLastOrderQuantity(good.getLastOrderQuantity());*/
+            (list.get(i)).setRecommendedOrderQuantity(recommendedOrderQuantity.get(i));
         }
         map.put("GoodsDictionary", list);
         return map;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.huijian.rac.mapper.ReturnGoodsDetailMapper">
+<mapper namespace="com.huijian.rac.mapper.OrderReturnDetailMapper">
     <resultMap id="BaseResultMap" type="com.huijian.rac.bean.ReturnGoodsDetail">
         <id column="return_goods_no" jdbcType="VARCHAR" property="returnGoodsNo"></id>
         <result column="goods_id" jdbcType="INTEGER" property="goodsID"/>
@@ -12,21 +12,9 @@
         <result column="unitPrice" jdbcType="VARCHAR" property="unitPrice"/>
         <result column="productionBatch" jdbcType="VARCHAR" property="productionBatch"/>
     </resultMap>
-
-    <insert id="addReturnGoodsDetail" parameterType="com.huijian.rac.bean.ReturnGoodsDetail">
-        insert into sj_returngoodsdetail (return_goods_no, goods_id, amount, productionBatch)
-        values
-        <foreach collection="list" item="item" separator=","  index="index">
-            (#{item.returnGoodsNo},
-            #{item.goodsID},
-            #{item.amount},
-            #{item.productionBatch})
-        </foreach>
-    </insert>
-
     <select id="inquiryByID" resultMap="BaseResultMap">
-        select sr.*, dic.GoodsName, dic.Unit unit, dic.UnitPrice unitPrice from  sj_returngoodsdetail as sr inner join
-        sj_goodsdictionary as dic on return_goods_no=#{returnGoodsNo} and dic.GoodsID = sr.goods_id
+        select sr.*, dic.GoodsName, dic.UnitPrice unitPrice, su.UnitName unit from  sj_returngoodsdetail as sr inner join
+        sj_goodsdictionary as dic on return_goods_no=#{returnGoodsNo} and dic.GoodsID = sr.goods_id left join
+        sj_unit su on dic.UnitID = su.UnitID
     </select>
-
 </mapper>

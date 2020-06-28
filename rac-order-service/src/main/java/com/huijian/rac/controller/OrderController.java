@@ -11,6 +11,7 @@ import java.lang.Package;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/Order")
@@ -119,13 +120,27 @@ public class OrderController {
         for (int i = 0; i < hospitalIDAndGood.getGood().size(); i++) {
             goodsIDs[i] = hospitalIDAndGood.getGood().get(i).getGoodsID();
         }
-        List<OrderDetail> orderDetails = orderDetailService.inquriyByOrderNo(order.getOrderNo(), goodsIDs);
-        int[] num = new int[orderDetails.size()];
+        List<OrderDetail> orderDetails = orderDetailService.inquriyByOrderNo(goodsIDs);
+        /*int[] num = new int[orderDetails.size()];
         for (int i = 0; i < orderDetails.size(); i++) {
             num[i] = orderDetails.get(i).getAmount();
-        }
+        }*/
+        List<Good> list = hospitalIDAndGood.getGood().stream().map(e->{
+            for (int i=0;i<orderDetails.size();i++){
+                if(e.getGoodsID()==orderDetails.get(i).getGoodsID()){
+                    e.setLastOrderQuantity(orderDetails.get(i).getAmount());
+                    break;
+                }else if(e.getGoodsID()!=orderDetails.get(i).getGoodsID()&&i==orderDetails.size()-1){
+                    e.setLastOrderQuantity(0);
+                }else{
+
+                }
+            }
+            return e;
+        }).collect(Collectors.toList());
+
         Map<String, Object> map = new HashMap<>();
-        map.put("num", num);
+        map.put("num", list);
         return map;
     }
 
